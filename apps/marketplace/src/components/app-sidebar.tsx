@@ -8,10 +8,13 @@ import {
   Bot,
   MessageCircle,
   Compass,
-  CreditCard,
+  FolderOpen,
+  Users,
   BarChart3,
+  CreditCard,
   Settings,
   LogOut,
+  ChevronRight,
 } from 'lucide-react'
 
 import { SierpinskiLogo } from '@/components/sierpinski-logo'
@@ -26,20 +29,15 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
-
-const mainNav = [
-  { title: 'Home', href: '/workspace/home', icon: Home },
-  { title: 'My Assistants', href: '/workspace/home', icon: Bot },
-  { title: 'Chat', href: '/workspace/home', icon: MessageCircle },
-  { title: 'Discover', href: '/discover', icon: Compass },
-]
-
-const manageNav = [
-  { title: 'Usage', href: '/usage', icon: BarChart3 },
-  { title: 'Billing', href: '/settings/billing', icon: CreditCard },
-  { title: 'Settings', href: '/workspace/settings', icon: Settings },
-]
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
@@ -65,42 +63,139 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainNav.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === item.href || pathname.startsWith(item.href + '/')}
-                    tooltip={item.title}
-                  >
-                    <Link href={item.href}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === '/workspace/home'}
+                  tooltip="Home"
+                >
+                  <Link href="/workspace/home">
+                    <Home />
+                    <span>Home</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === '/discover' || pathname.startsWith('/discover/')}
+                  tooltip="Discover"
+                >
+                  <Link href="/discover">
+                    <Compass />
+                    <span>Discover</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Projects — each project has teams, each team has agents + chat */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Projects</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <Collapsible defaultOpen className="group/collapsible">
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton tooltip="My Project">
+                      <FolderOpen />
+                      <span>My Project</span>
+                      <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {/* Team */}
+                      <Collapsible defaultOpen className="group/team">
+                        <SidebarMenuSubItem>
+                          <CollapsibleTrigger asChild>
+                            <SidebarMenuSubButton>
+                              <Users className="size-4" />
+                              <span>My Team</span>
+                              <ChevronRight className="ml-auto size-3 transition-transform group-data-[state=open]/team:rotate-90" />
+                            </SidebarMenuSubButton>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent>
+                            <SidebarMenuSub>
+                              <SidebarMenuSubItem>
+                                <SidebarMenuSubButton asChild isActive={pathname.includes('/agents')}>
+                                  <Link href="/workspace/home">
+                                    <Bot className="size-4" />
+                                    <span>Agents</span>
+                                  </Link>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                              <SidebarMenuSubItem>
+                                <SidebarMenuSubButton asChild isActive={pathname.includes('/chat')}>
+                                  <Link href="/workspace/home">
+                                    <MessageCircle className="size-4" />
+                                    <span>Chat</span>
+                                  </Link>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                              <SidebarMenuSubItem>
+                                <SidebarMenuSubButton asChild isActive={false}>
+                                  <Link href="/workspace/home">
+                                    <Settings className="size-4" />
+                                    <span>Settings</span>
+                                  </Link>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            </SidebarMenuSub>
+                          </CollapsibleContent>
+                        </SidebarMenuSubItem>
+                      </Collapsible>
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
                 </SidebarMenuItem>
-              ))}
+              </Collapsible>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Manage</SidebarGroupLabel>
+          <SidebarGroupLabel>Account</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {manageNav.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === item.href || pathname.startsWith(item.href + '/')}
-                    tooltip={item.title}
-                  >
-                    <Link href={item.href}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === '/usage'}
+                  tooltip="Usage"
+                >
+                  <Link href="/usage">
+                    <BarChart3 />
+                    <span>Usage</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === '/settings/billing'}
+                  tooltip="Billing"
+                >
+                  <Link href="/settings/billing">
+                    <CreditCard />
+                    <span>Billing</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === '/workspace/settings' || pathname.startsWith('/workspace/settings/')}
+                  tooltip="Settings"
+                >
+                  <Link href="/workspace/settings">
+                    <Settings />
+                    <span>Settings</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
