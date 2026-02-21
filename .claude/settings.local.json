@@ -32,7 +32,10 @@
       "Bash(git commit:*)",
       "Bash(git merge:*)",
       "Bash(git stash:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(cd /c/Users/psyhik1769/openagents && git reset HEAD 2>&1)",
+      "WebFetch(domain:app.unpkg.com)",
+      "Bash(cd /c/Users/psyhik1769/openagents && git diff --stat function/workspace-layout...function/workspace-layout 2>&1 && git log --oneline function/workspace-layout --not dev 2>&1)"
     ]
   },
   "enableAllProjectMcpServers": true,

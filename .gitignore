@@ -64,3 +64,9 @@ apps/docs/
 bash.exe.stackdump
 .trigger
 
+.claude/settings.local.json
+docker/agent-base/.claude/agent-memory/deep-tech-researcher/MEMORY.md
+docker/agent-base/.claude/agent-memory/deep-tech-researcher/openclaw-gateway.md
+.claude/settings.local.json
+.claude/settings.local.json
+.claude/settings.local.json
