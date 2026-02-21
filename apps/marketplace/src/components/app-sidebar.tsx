@@ -109,7 +109,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   isActive={pathname.includes('/agents')}
                   tooltip="Agents"
                 >
-                  <Link href="/workspace/home">
+                  <Link href="/workspace/agents">
                     <Bot />
                     <span>Agents</span>
                   </Link>
@@ -122,7 +122,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   isActive={pathname.includes('/chat')}
                   tooltip="Chat"
                 >
-                  <Link href="/workspace/home">
+                  <Link href="/workspace/chat">
                     <MessageCircle />
                     <span>Chat</span>
                   </Link>
