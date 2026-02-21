@@ -7,14 +7,13 @@ import {
   Home,
   Bot,
   MessageCircle,
-  Compass,
-  FolderOpen,
-  Users,
   BarChart3,
   CreditCard,
   Settings,
   LogOut,
-  ChevronRight,
+  Check,
+  ChevronsUpDown,
+  FolderOpen,
 } from 'lucide-react'
 
 import { SierpinskiLogo } from '@/components/sierpinski-logo'
@@ -29,32 +28,60 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible'
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+
+// Placeholder — will be fetched from DB
+const projects = [
+  { id: 'default', name: 'My Project' },
+]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
+  const [activeProject, setActiveProject] = React.useState(projects[0])
 
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild size="lg">
-              <Link href="/workspace/home">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <SierpinskiLogo className="size-4" />
-                </div>
-                <span className="text-base font-semibold tracking-tight">OpenAgents</span>
-              </Link>
-            </SidebarMenuButton>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton
+                  size="lg"
+                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                >
+                  <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                    <SierpinskiLogo className="size-4" />
+                  </div>
+                  <div className="flex flex-col gap-0.5 leading-none">
+                    <span className="font-semibold">OpenAgents</span>
+                    <span className="text-xs text-muted-foreground">{activeProject.name}</span>
+                  </div>
+                  <ChevronsUpDown className="ml-auto size-4" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-(--radix-dropdown-menu-trigger-width)"
+                align="start"
+              >
+                {projects.map((project) => (
+                  <DropdownMenuItem
+                    key={project.id}
+                    onSelect={() => setActiveProject(project)}
+                  >
+                    <FolderOpen className="mr-2 size-4" />
+                    {project.name}
+                    {project.id === activeProject.id && <Check className="ml-auto size-4" />}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -79,79 +106,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
-                  isActive={pathname === '/discover' || pathname.startsWith('/discover/')}
-                  tooltip="Discover"
+                  isActive={pathname.includes('/agents')}
+                  tooltip="Agents"
                 >
-                  <Link href="/discover">
-                    <Compass />
-                    <span>Discover</span>
+                  <Link href="/workspace/home">
+                    <Bot />
+                    <span>Agents</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
 
-        {/* Projects — each project has teams, each team has agents + chat */}
-        <SidebarGroup>
-          <SidebarGroupLabel>Projects</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <Collapsible defaultOpen className="group/collapsible">
-                <SidebarMenuItem>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip="My Project">
-                      <FolderOpen />
-                      <span>My Project</span>
-                      <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {/* Team */}
-                      <Collapsible defaultOpen className="group/team">
-                        <SidebarMenuSubItem>
-                          <CollapsibleTrigger asChild>
-                            <SidebarMenuSubButton>
-                              <Users className="size-4" />
-                              <span>My Team</span>
-                              <ChevronRight className="ml-auto size-3 transition-transform group-data-[state=open]/team:rotate-90" />
-                            </SidebarMenuSubButton>
-                          </CollapsibleTrigger>
-                          <CollapsibleContent>
-                            <SidebarMenuSub>
-                              <SidebarMenuSubItem>
-                                <SidebarMenuSubButton asChild isActive={pathname.includes('/agents')}>
-                                  <Link href="/workspace/home">
-                                    <Bot className="size-4" />
-                                    <span>Agents</span>
-                                  </Link>
-                                </SidebarMenuSubButton>
-                              </SidebarMenuSubItem>
-                              <SidebarMenuSubItem>
-                                <SidebarMenuSubButton asChild isActive={pathname.includes('/chat')}>
-                                  <Link href="/workspace/home">
-                                    <MessageCircle className="size-4" />
-                                    <span>Chat</span>
-                                  </Link>
-                                </SidebarMenuSubButton>
-                              </SidebarMenuSubItem>
-                              <SidebarMenuSubItem>
-                                <SidebarMenuSubButton asChild isActive={false}>
-                                  <Link href="/workspace/home">
-                                    <Settings className="size-4" />
-                                    <span>Settings</span>
-                                  </Link>
-                                </SidebarMenuSubButton>
-                              </SidebarMenuSubItem>
-                            </SidebarMenuSub>
-                          </CollapsibleContent>
-                        </SidebarMenuSubItem>
-                      </Collapsible>
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </SidebarMenuItem>
-              </Collapsible>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname.includes('/chat')}
+                  tooltip="Chat"
+                >
+                  <Link href="/workspace/home">
+                    <MessageCircle />
+                    <span>Chat</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
